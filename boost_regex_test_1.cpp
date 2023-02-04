@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
     // Reference article https://theboostcpplibraries.com/boost.regex
-    
+
     //Example 8.1. Comparing strings with boost::regex_match()
     std::string s = "Boost Libraries";
     boost::regex expr{"\\w+\\s\\w+"};
@@ -29,4 +29,25 @@ int main(int argc, char* argv[])
         std::cout << what[0] << '\n';
         std::cout << what[1] << "_" << what[2] << '\n';
         }
+    //Example 8.3. Replacing characters in strings with boost::regex_replace()
+    std::string s2 = "Boost Libraries";
+    boost::regex expr3{"\\s"};
+    std::string fmt{"_"};
+    std::cout << boost::regex_replace(s2, expr3, fmt) << '\n';
+    // boost::regex_replace() always searches through the entire string for the regular expression. Thus, the program actually replaces all three spaces with underscores.
+
+    //Example 8.4. Format with references to groups in regular expressions== use it for swapping groups
+    std::string s3 = "Boost Libraries";
+    boost::regex expr4{"(\\w+)\\s(\\w+)"};
+    std::string fmt4{"\\2 \\1"};
+    std::cout << boost::regex_replace(s3, expr4, fmt4) << '\n';
+    // Example 8.6. Iterating over strings with boost::regex_token_iterator
+    std::string s5 = "Boost Libraries";
+    boost::regex expr5{"\\w+"};
+    boost::regex_token_iterator<std::string::iterator> it{s5.begin(), s5.end(),expr5};
+    boost::regex_token_iterator<std::string::iterator> end;
+    while (it != end)
+        std::cout << *it++ << '\n';
+    //  it is initialized with iterators to s and the regular expression “\w+”. The default constructor creates an end iterator.
+    
 }
