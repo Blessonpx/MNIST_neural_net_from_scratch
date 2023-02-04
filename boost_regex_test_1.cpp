@@ -1,6 +1,7 @@
 #include <boost/regex.hpp>
 #include <string>
 #include <iostream>
+#include <locale>
 
 int main(int argc, char* argv[])
 {
@@ -49,5 +50,19 @@ int main(int argc, char* argv[])
     while (it != end)
         std::cout << *it++ << '\n';
     //  it is initialized with iterators to s and the regular expression “\w+”. The default constructor creates an end iterator.
-    
+
+    // Example 8.7. Accessing groups with boost::regex_token_iterator
+    std::string s6 = "Boost Libraries";
+    boost::regex expr6{"(\\w)\\w+"};
+    boost::regex_token_iterator<std::string::iterator> it2{s6.begin(), s6.end(),expr6, 1};
+    boost::regex_token_iterator<std::string::iterator> end2;
+    while (it2 != end2)
+        std::cout << *it2++ << '\n';
+
+    // Example 8.8. Linking a locale to a regular expression
+    std::string s7 = "Boost k\xfct\xfcphaneleri";
+    boost::basic_regex<char, boost::cpp_regex_traits<char>> expr7;
+    expr7.imbue(std::locale{"Turkish"});
+    expr7 = "\\w+\\s\\w+";
+    std::cout << std::boolalpha << boost::regex_match(s7, expr7) << '\n';
 }
