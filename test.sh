@@ -14,4 +14,4 @@ file_name=$1
 ##############################
 # Execute For Customer Master 
 ##############################
-g++  -I$boost_home  $file_name -o output  $boost_home/boost/regex.hpp $boost_home/boost/multi_array.hpp  $boost_home/boost/numeric/ublas/matrix.hpp $boost_home/boost/numeric/ublas/operation.hpp   && ./output  /home/blesson/base_code/neural_net/data/sample_test.csv
+g++  -I$boost_home  $file_name -o output  $boost_home/boost/regex.hpp $boost_home/boost/multi_array.hpp  $boost_home/boost/numeric/ublas/matrix.hpp $boost_home/boost/numeric/ublas/operation.hpp   && ./output  /home/blesson/base_code/neural_net/data/sample_train.csv

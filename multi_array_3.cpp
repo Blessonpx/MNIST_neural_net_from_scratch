@@ -5,6 +5,10 @@
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <fstream>
+#include <boost/regex.hpp>
+
+
 
 using namespace std;
 using namespace boost::numeric::ublas;
@@ -35,10 +39,86 @@ void columnProxyModify(matrix<int> &A){
             mc(j) = 3 * i + j;
     }
 }
-// Read CSV and return matrix Function
-void readDataCsv(matrix<int> &A,string filename){
+// Read CSV size and return column_size
+int checkCsvColumnSize(string filename){
     // Use separator for this from regex command
+    ifstream infile;
+    string read_file_name(filename);
+    infile.open(read_file_name);
+    string sLine;
+    int size_final=0;
+    // Prints just the first line
+    if (infile.good())
+    {
+        string sLine;
+        getline(infile, sLine);
+        boost::regex expr{"\\w+\\w+"};
+        boost::regex_token_iterator<std::string::iterator> it{sLine.begin(), sLine.end(),expr};
+        boost::regex_token_iterator<std::string::iterator> end;
+        while (it != end){
+            it++;
+            size_final++;
+        }
+    }
+    return size_final;
 }
+// Read CSV size and return row_size
+int checkCsvRowSize(string filename){
+    // Use separator for this from regex command
+    ifstream infile;
+    string read_file_name(filename);
+    infile.open(read_file_name);
+    string sLine;
+    int size_final=0;
+    while (!infile.eof())
+    {
+        getline(infile, sLine);
+        //cout << sLine.data() << endl;
+        ++size_final;
+    }
+    cout<<"size_final="<<size_final<<endl;
+    return size_final-2;
+}
+// Read CSV file and file and return Filled Matrix 
+void insertCsvData(matrix<int> &A,string filename,int row_size,int col_size){
+    ifstream infile;
+    string read_file_name(filename);
+    infile.open(read_file_name);
+    string sLine;
+    int size_final=0;
+    int tmp=0;
+    std::vector <string> tokens;
+    while (!infile.eof())
+    {
+        getline(infile, sLine);
+        cout <<"size_final::="<<size_final<< endl;
+        if(size_final<=row_size && size_final>0){
+            // Fed sLine Data into the matrix for the specific row 
+            // Matrix in index so should be no problem 
+            // A(i,j)
+            // Spilt the spline with Iterator
+            unsigned int j=0;
+            boost::regex expr{"\\w+\\w+"};
+            boost::regex_token_iterator<std::string::iterator> it{sLine.begin(), sLine.end(),expr};
+            boost::regex_token_iterator<std::string::iterator> end;
+            //cout<<"Type of it="<<typeid(it).name()<<endl;
+            
+            while (it != end){
+                //tmp=*it;
+                //cout<<*it++<<endl;
+                tokens.push_back(*it);
+                string m1=tokens.back();
+                int p=stoi(m1);
+                A(size_final,j)=p;
+                it++;
+                j++;
+            }
+            //cout<<tokens<<endl;
+        }
+        ++size_final;
+    }
+}
+
 
 int main(int argc, char* argv[]){
     cout<<"Inside code"<<endl;
@@ -71,7 +151,6 @@ int main(int argc, char* argv[]){
     std::cout << mvs << std::endl;
     // Now Read CSV Files
     string filename;
-    //filename = argv[1];
     if (argc < 2) {
 		filename = "NA";
 	} else {
@@ -81,6 +160,11 @@ int main(int argc, char* argv[]){
     cout<<"argc :"<<argc<<endl;
     int size_k=9;
     matrix<int> J(size_k,size_k);
-    readDataCsv(J,filename);
+    int size_col=checkCsvColumnSize(filename);
+    int size_row=checkCsvRowSize(filename);
+    cout<<"Size of CSV="<<size_col<<"::"<<size_row<<endl;
+    // Now Create a Matrix of Size row*col
+    matrix<int> train_data(size_row,size_col);
+    insertCsvData(train_data,filename,size_row,size_col);
     return 0;
 }
