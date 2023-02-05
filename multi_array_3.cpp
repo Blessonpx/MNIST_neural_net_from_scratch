@@ -166,5 +166,11 @@ int main(int argc, char* argv[]){
     // Now Create a Matrix of Size row*col
     matrix<int> train_data(size_row,size_col);
     insertCsvData(train_data,filename,size_row,size_col);
+    for (unsigned int i=0; i<9;i++){
+        for (unsigned int j=0; j<9;j++){
+            cout<<train_data(i,j);
+        }
+        cout<<'\n';
+    }
     return 0;
 }
