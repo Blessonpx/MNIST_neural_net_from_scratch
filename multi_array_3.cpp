@@ -92,7 +92,7 @@ void insertCsvData(matrix<int> &A,string filename,int row_size,int col_size){
     {
         getline(infile, sLine);
         cout <<"size_final::="<<size_final<< endl;
-        if(size_final<=row_size && size_final>0){
+        if(size_final<row_size && size_final>0){
             // Fed sLine Data into the matrix for the specific row 
             // Matrix in index so should be no problem 
             // A(i,j)
